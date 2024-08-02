@@ -30,7 +30,7 @@ model User {
 model Posts {
   id Int @id @default(autoincrement())
   title String
-  author User @relation(fields: [authorId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
@@ -42,8 +42,8 @@ model Posts {
 
 model Comments {
   id Int @id @default(autoincrement())
-  author User @relation(fields: [authorId], references: [id])
-  post Posts @relation(fields: [postId], references: [id])
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
   authorId Int
   createdAt DateTime @default(now())

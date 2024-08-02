@@ -36,7 +36,7 @@ const createSampleUser = asyncHandler(async (req, res) => {
 
 const retrieveUserbyID = asyncHandler(async (req, res) => {
     const id = req.body.id
-    if(!id) {return res.status(400).json({error: "invalid request: id required"})}
+    if(!id) {return res.status(400).json({error: "Invalid request: id required"})}
     const user = await prisma.user.findUnique({
         where: {
             id: id
@@ -62,6 +62,37 @@ const updateUser = asyncHandler(async (req, res) => {
         }
         res.status(500).json({ error: "Failed to Update User"})
     }
+
+})
+
+const deleteUser = asyncHandler(async (req, res)=> {
+    const {id, ...extras} = req.body
+
+    //Helpers
+    const isObjectEmpty = (obj) => {
+        return Object.keys(obj).length === 0;
+    }
+
+    const isUserAuthor = (userRecord) => {
+        return userRecord.posts ? true : false
+    }
+
+
+    containsExtras = isObjectEmpty(extras)
+
+    //Checks
+    if(!id) return res.status(400).json({error: "Invalid request: id required"})
+    if (containsExtras) {return res.status(400).json({error: "Invalid request: too many fields provided"})}
+
+    try {
+        await prisma.user.delete({
+            where: {id: id}
+        })
+        res.status(200).json('user deleted successfully')
+    } catch (error) {
+        res.status(400).json(`Request to delete user with id ${id} has failed. ${error}`)
+    }
+
 
 })
 
