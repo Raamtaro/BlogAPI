@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', userController.getAllUsers)
 router.get('/user', userController.retrieveUserbyID)
 router.post('/newuser', userController.createSampleUser)
-// router.put('/:userid')
+router.put('/user', userController.updateUser)
 // router.delete('/:userid')
 
 export default router

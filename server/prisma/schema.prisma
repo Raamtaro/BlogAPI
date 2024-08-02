@@ -17,6 +17,7 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   email String @unique
   password String
   name String?
@@ -32,6 +33,7 @@ model Posts {
   author User @relation(fields: [authorId], references: [id])
   authorId Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   published Boolean @default(false)
   body String
   comments Comments[]
@@ -45,6 +47,7 @@ model Comments {
   postId Int
   authorId Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 enum Role {

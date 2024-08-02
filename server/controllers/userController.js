@@ -36,7 +36,7 @@ const createSampleUser = asyncHandler(async (req, res) => {
 
 const retrieveUserbyID = asyncHandler(async (req, res) => {
     const id = req.body.id
-    if(!id) {return res.status(400).json({error: "id required"})}
+    if(!id) {return res.status(400).json({error: "invalid request: id required"})}
     const user = await prisma.user.findUnique({
         where: {
             id: id
@@ -45,8 +45,29 @@ const retrieveUserbyID = asyncHandler(async (req, res) => {
     res.status(200).json({user})
 })
 
+const updateUser = asyncHandler(async (req, res) => {
+    const {id, ...updateData} = req.body
+    if (!id) {return res.status(400).json({error: "Invalid request: id required"})}
+
+    try {
+        const user = await prisma.user.update({
+            where: {id: Number(id)},
+            data: updateData
+        })
+        res.status(200).json({ user })
+    } catch (error) {
+        console.error(error)
+        if (error instanceof prisma.PrismaClientValidationError) {
+            return res.status(400).json({ error: 'Invalid field provided' });
+        }
+        res.status(500).json({ error: "Failed to Update User"})
+    }
+
+})
+
 export default {
     getAllUsers, 
     createSampleUser,
-    retrieveUserbyID
+    retrieveUserbyID,
+    updateUser
 }
