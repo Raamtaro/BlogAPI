@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 const getAllUsers = asyncHandler(async (req, res) => {
     //prisma query (findmany()) to get users
     const allUsers = await prisma.user.findMany();
-    res.send(Object.values(allUsers))
+    res.status(200).json(allUsers)
 })
 
 const createSampleUser = asyncHandler(async (req, res) => {
@@ -70,6 +70,7 @@ const deleteUser = asyncHandler(async (req, res)=> {
 
     //Helpers
     const isObjectEmpty = (obj) => {
+        console.log(obj)
         return Object.keys(obj).length === 0;
     }
 
@@ -78,11 +79,11 @@ const deleteUser = asyncHandler(async (req, res)=> {
     }
 
 
-    containsExtras = isObjectEmpty(extras)
+    const containsExtras = isObjectEmpty(extras)
 
     //Checks
     if(!id) return res.status(400).json({error: "Invalid request: id required"})
-    if (containsExtras) {return res.status(400).json({error: "Invalid request: too many fields provided"})}
+    if (!containsExtras) {return res.status(400).json({error: "Invalid request: too many fields provided"})}
 
     try {
         await prisma.user.delete({
@@ -100,5 +101,6 @@ export default {
     getAllUsers, 
     createSampleUser,
     retrieveUserbyID,
-    updateUser
+    updateUser,
+    deleteUser
 }
