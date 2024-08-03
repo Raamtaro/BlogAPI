@@ -40,7 +40,10 @@ const retrieveUserbyID = asyncHandler(async (req, res) => {
     const user = await prisma.user.findUnique({
         where: {
             id: id
-        }
+        },
+        // include: {
+        //     posts: true
+        // }
     })
     res.status(200).json({user})
 })
