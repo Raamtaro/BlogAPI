@@ -89,9 +89,9 @@ const deleteUser = asyncHandler(async (req, res)=> {
         await prisma.user.delete({
             where: {id: id}
         })
-        res.status(200).json('user deleted successfully')
+        res.status(200).json({message: 'user deleted successfully'})
     } catch (error) {
-        res.status(400).json(`Request to delete user with id ${id} has failed. ${error}`)
+        res.status(400).json({error: `Request to delete user with id ${id} has failed. ${error}`})
     }
 
 
