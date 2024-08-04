@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcryptjs'
+import { validationResult } from 'express-validator';
 
 
 const prisma = new PrismaClient();
@@ -13,7 +14,24 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const createSampleUser = asyncHandler(async (req, res) => {
     //Eventually users are only going to be created via logging them in - this may come in handy there.
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json( {
+            error: errors.array()
+        })
+    }
+
+
     const {email, password, name} = req.body;
+
+    const existingUser = await prisma.user.findUnique({
+        where: {email: email}
+    })
+    if (existingUser) {
+        return res.status(400).json({error: 'Email is already in use'})
+    }
+
+
     if (!email || !password) {
         return res.status(400).json({error: "Email and Password required"})
     };
@@ -49,6 +67,13 @@ const retrieveUserbyID = asyncHandler(async (req, res) => {
 })
 
 const updateUser = asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json( {
+            error: errors.array()
+        })
+    }
+
     const {id, ...updateData} = req.body
     if (!id) {return res.status(400).json({error: "Invalid request: id required"})}
 
