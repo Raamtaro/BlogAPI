@@ -1,5 +1,6 @@
 import commentController from "../controllers/commentController.js";
 import { Router } from "express";
+import validationMiddleware from "../middlewares/validationMiddleware.js";
 const router = Router();
 
 router.get('/', commentController.retrieveAllComments)

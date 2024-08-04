@@ -1,12 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import { PrismaClient } from "@prisma/client";
-
-
-/**
- * THIS NEEDS TO BE UPDATED:
- * - include prisma error code handling
- * - include relation logic
- */
+import { validationResult } from 'express-validator';
 
 const prisma = new PrismaClient();
 
@@ -28,11 +22,21 @@ const retrieveComment = asyncHandler(async (req, res) => {
 })
 
 const createComment = asyncHandler(async (req, res) => {
-    const commentBody = req.body.body
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json( {
+            error: errors.array()
+        })
+    }
+    const {body, authorId, postId} = req.body
     try {    
         const newComment = await prisma.comments.create(
             {
-                data: commentBody
+                data: {
+                    body,
+                    author: {connect: {id: authorId}},
+                    post: {connect: {id: postId}}
+                }
             }
         )
         res.status(201).json(newComment)
@@ -45,6 +49,13 @@ const createComment = asyncHandler(async (req, res) => {
 })
 
 const editComment = asyncHandler(async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json( {
+            error: errors.array()
+        })
+    }
+
     const {id, body}  = req.body
     try {
         const comment = await prisma.comments.update({

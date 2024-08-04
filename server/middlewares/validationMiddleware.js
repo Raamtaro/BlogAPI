@@ -12,7 +12,7 @@ const validateUserCreation = [
 ]
 
 const validateUserUpdate = [
-    body("name").optional.trim()
+    body("name").optional().trim()
         .isAlpha().withMessage("Must contain A-Z or a-z characters")
         .isLength({min: 3}).withMessage("Must be at least 3 characters")
 
