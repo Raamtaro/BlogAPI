@@ -29,16 +29,17 @@ const validatePostMod = [
 ]
 
 
-const validateCommentCreation = [
-
+const validateCommentMod = [
+    body("body").trim()
+        .isLength({min: 1, max: 50}).withMessage("Must not exceed 50 characters")
+        .isString().withMessage("Must be a string")
 ]
 
-const validateCommentUpdate = [
-    
-]
+
 
 export default {
     validateUserCreation,
     validateUserUpdate,
-    validatePostMod
+    validatePostMod,
+    validateCommentMod
 }
