@@ -14,6 +14,9 @@ const getPost = asyncHandler(async (req, res) => {
     const id = req.body.id 
     const retrievedPost = await prisma.posts.findUnique({
         where: {id: id},
+        include: {
+            comments: true
+        }
 
     })
     res.status(200).json({retrievedPost})
