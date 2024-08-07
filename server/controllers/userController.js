@@ -14,6 +14,8 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const createSampleUser = asyncHandler(async (req, res) => {
     //Eventually users are only going to be created via logging them in - this may come in handy there.
+    //This WILL come in handy - this is basically what happens when a user creates an account. 
+    //THIS HAS MOVED TO THE authController.js file
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json( {
