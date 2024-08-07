@@ -10,4 +10,3 @@ router.post('/login',  authController.loginUser)
 router.get('/profile', passport.authenticate('jwt', {session: false}), authController.getProfile)
 
 export default router
-

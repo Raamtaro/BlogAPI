@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import { validationResult } from 'express-validator'
 import { configDotenv } from 'dotenv'
-import { localStrategy } from '../config/passportLocalStrategy.js'
+
 
 configDotenv();
 
