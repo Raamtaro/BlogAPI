@@ -39,9 +39,11 @@ const createPost = asyncHandler(async (req, res) => {
 
 
     if (!(client.role === "ADMIN")) {
-        return res.status(403).json({
-            error: "Cannot create posts without ADMIN assignment"
-        })
+        return res.status(403).json(
+            {
+                error: "Cannot create posts without ADMIN assignment"
+            }
+        )
     }
 
     if (!title || !body) {
@@ -123,7 +125,7 @@ const updatePost = asyncHandler(async (req, res) => {
 
 const deletePost = asyncHandler(async (req, res) => {
     const client = req.user
-    const id = req.body
+    const id = req.body.id
 
 
     // if (!id || !authorId) { //Redo this check - client id against the authorId
@@ -139,7 +141,7 @@ const deletePost = asyncHandler(async (req, res) => {
 
     if (!(client.id === postToBeDeleted.authorId)) {
         return res.status(403).json(
-            {error: "Forbidden"}
+            {error: "Forbidden: Cannot Delete another User's Post"}
         )
     }
 
@@ -150,7 +152,7 @@ const deletePost = asyncHandler(async (req, res) => {
                 id: id
             }
         })
-        res.status(200).json({message: "User Deleted"})
+        res.status(200).json({message: "Post Deleted"})
     } catch (error) {
         console.log(error)
         res.status(500).json({error: "Failed to delete the post"})

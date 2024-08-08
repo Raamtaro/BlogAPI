@@ -19,6 +19,11 @@ const createSampleUser = asyncHandler(async (req, res) => {
     //Eventually users are only going to be created via logging them in - this may come in handy there.
     //This WILL come in handy - this is basically what happens when a user creates an account. 
     //THIS HAS MOVED TO THE authController.js file
+
+    //REPURPOSING THIS FUNCTION
+    //This will be my way of forcefully creating an admin
+
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json( {
@@ -27,7 +32,7 @@ const createSampleUser = asyncHandler(async (req, res) => {
     }
 
 
-    const {email, password, name} = req.body;
+    const {email, password, name, role} = req.body;
 
     const existingUser = await prisma.user.findUnique({
         where: {email: email}
@@ -44,7 +49,8 @@ const createSampleUser = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userData = {
         email, 
-        password: hashedPassword
+        password: hashedPassword,
+        role: role
     };
 
     if (name) userData.name = name;
@@ -132,6 +138,16 @@ const deleteUser = asyncHandler(async (req, res)=> {
 
 
 })
+
+/**
+ * SPECIAL METHOD: Admin creation
+ */
+
+const createAdmin = asyncHandler(
+    async (req, res) => {
+
+    }
+)
 
 export default {
     getAllUsers, 
