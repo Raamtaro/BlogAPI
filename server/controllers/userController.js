@@ -2,6 +2,9 @@ import asyncHandler from 'express-async-handler'
 import { PrismaClient } from "@prisma/client";
 import bcrypt from 'bcryptjs'
 import { validationResult } from 'express-validator';
+import { configDotenv } from 'dotenv';
+
+configDotenv()
 
 
 const prisma = new PrismaClient();
@@ -77,6 +80,17 @@ const updateUser = asyncHandler(async (req, res) => {
     }
 
     const {id, ...updateData} = req.body
+    const client = req.user
+
+    //Throw a 403 if the client.id is not the same as the id in the req.body OR if the client.email is not mine. 
+    //People shouldn't be able to update user info unless it is their own, or if they aren't me
+
+    if (client.id != id && client.email != process.env.SECRET_EMAIL) {
+        return res.status(403).json({
+            error: "Forbidden"
+        })
+    }
+
     if (!id) {return res.status(400).json({error: "Invalid request: id required"})}
 
     try {
@@ -96,24 +110,16 @@ const updateUser = asyncHandler(async (req, res) => {
 })
 
 const deleteUser = asyncHandler(async (req, res)=> {
-    const {id, ...extras} = req.body
-
-    //Helpers
-    const isObjectEmpty = (obj) => {
-        console.log(obj)
-        return Object.keys(obj).length === 0;
-    }
-
-    const isUserAuthor = (userRecord) => {
-        return userRecord.posts ? true : false
-    }
-
-
-    const containsExtras = isObjectEmpty(extras)
+    const {id} = req.body
+    const client = req.user
 
     //Checks
+    if(client.email != process.env.SECRET_EMAIL) {
+        return res.status(403).json({
+            error: "Forbidden"
+        })
+    }
     if(!id) return res.status(400).json({error: "Invalid request: id required"})
-    if (!containsExtras) {return res.status(400).json({error: "Invalid request: too many fields provided"})}
 
     try {
         await prisma.user.delete({

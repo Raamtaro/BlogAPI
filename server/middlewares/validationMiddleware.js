@@ -24,7 +24,7 @@ const validatePostMod = [
         .isString().withMessage("Must be a string"),
     body("title").optional().trim()
         .isLength({min: 3, max: 59}).withMessage("Must be 3-59 characters")
-        .isAlpha().withMessage("Must contain A-Z or a-z characters")
+        .isString().withMessage("Must be a string")
 
 ]
 

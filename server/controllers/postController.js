@@ -1,6 +1,10 @@
 import asyncHandler from 'express-async-handler'
 import { validationResult } from 'express-validator'
 import { PrismaClient } from "@prisma/client"
+import { configDotenv } from 'dotenv'
+
+
+configDotenv()
 const prisma = new PrismaClient()
 
 const getAllPosts = asyncHandler(async (req, res) => {
@@ -30,17 +34,24 @@ const createPost = asyncHandler(async (req, res) => {
         })
     }
 
+    const client = req.user
+    const {title, body} = req.body
 
-    const {title, body, authorId} = req.body
 
-    if (!title || !body || !authorId) {
-        return res.status(400).json({error: "title, body, authorId are all required"})
+    if (!(client.role === "ADMIN")) {
+        return res.status(403).json({
+            error: "Cannot create posts without ADMIN assignment"
+        })
+    }
+
+    if (!title || !body) {
+        return res.status(400).json({error: "title and body cannot be empty"})
     }
     const post = await prisma.posts.create({
         data: {
             title,
             body,
-            author: {connect: {id: authorId}},
+            author: {connect: {id: client.id}},
             
         },
 
@@ -56,12 +67,37 @@ const updatePost = asyncHandler(async (req, res) => {
         })
     }
     //destructure the authorId and postIds
-    const {id, authorId, body, title} = req.body
+    const client = req.user
+    const {id, body, title} = req.body
 
-    //Check to see if the user has included all three in their request
-    if (!id || !authorId || (!body && !title)) {
-        return res.status(400).json({error: "Invalid Request: need id, authorId and body and/or title args"})
+    //Get the post that is to be updated
+    const postToBeUpdated = await prisma.posts.findUnique( {
+        where: {
+            id: id
+        }
+    })
+
+    //check that the client.id is the same as the authorId of the post that is being queried
+    if (!(client.id === postToBeUpdated.authorId)) {
+        return res.status(403).json(
+            {
+                error: "Forbidden - clientId must match authorId"
+            }
+        )
     }
+
+    if (!body && !title) {
+        return res.status(400).json(
+            {
+                error: "Invalid request - must include body and/or title"
+            }
+        )
+    }
+
+    // //Check to see if the user has included all three in their request
+    // if (!id || !authorId || (!body && !title)) { //REDO: now that we're jwt verifying, a little bit more flexibility
+    //     return res.status(400).json({error: "Invalid Request: need id, authorId and body and/or title args"})
+    // }
 
     const updateData = {}
     if (body) updateData.body = body;
@@ -71,13 +107,14 @@ const updatePost = asyncHandler(async (req, res) => {
         const updatedPost = await prisma.posts.update({
             where: {
                 id: id,
-                authorId: authorId
+                // authorId: client.id don't need to include this anymore because we are verifying that the authorId is the correct one earlier on
             },
             data: {
                 body: body,
                 title: title
             }
         })
+        res.status(200).json({updatedPost})
     } catch(error) {
         console.error(error)
         res.status(500).json( { error: "Failed to update the post"})
@@ -85,15 +122,32 @@ const updatePost = asyncHandler(async (req, res) => {
 })
 
 const deletePost = asyncHandler(async (req, res) => {
-    const {id, authorId} = req.body
-    if (!id || !authorId) {
-        return res.status(400).json({error: "Invalid Request: please provide both an id and corresponding authorId"})
+    const client = req.user
+    const id = req.body
+
+
+    // if (!id || !authorId) { //Redo this check - client id against the authorId
+    //     return res.status(400).json({error: "Invalid Request: please provide both an id and corresponding authorId"})
+    // }
+
+    //First, get the post that is to be deleted
+    const postToBeDeleted = await prisma.posts.findUnique({
+        where: {
+            id: id
+        }
+    })
+
+    if (!(client.id === postToBeDeleted.authorId)) {
+        return res.status(403).json(
+            {error: "Forbidden"}
+        )
     }
+
+    
     try {
         await prisma.posts.delete({
             where: {
-                id: id,
-                authorId: authorId
+                id: id
             }
         })
         res.status(200).json({message: "User Deleted"})
