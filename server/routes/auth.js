@@ -7,6 +7,7 @@ const router = Router()
 
 router.post('/register', validationMiddleware.validateUserCreation, authController.registerUser)
 router.post('/login',  authController.loginUser)
+router.post('/logout', authController.logoutUser)
 router.get('/profile', passport.authenticate('jwt', {session: false}), authController.getProfile)
 
 export default router

@@ -26,6 +26,28 @@ const getPost = asyncHandler(async (req, res) => {
     res.status(200).json({retrievedPost})
 })
 
+const getCurrentUserPosts = asyncHandler(
+    async (req, res) => {
+        const client = req.user
+        if(client.role === "USER") {
+            return res.status(403).json(
+                {
+                    error: "Only admins can retrieve posts"
+                }
+            )
+        }
+        const allUsersPosts = await prisma.posts.findMany(
+            {
+                where: {
+                    id: client.id
+                }
+            }
+        )
+        res.status(200).json({allUsersPosts})
+
+    }
+)
+
 const createPost = asyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -162,6 +184,7 @@ const deletePost = asyncHandler(async (req, res) => {
 export default {
     getAllPosts,
     getPost,
+    getCurrentUserPosts,
     createPost,
     updatePost,
     deletePost

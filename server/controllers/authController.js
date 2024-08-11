@@ -65,6 +65,24 @@ const loginUser = (req, res, next) => {
       res.json({ user, token });
     })(req, res, next);
   };
+
+
+const logoutUser = (req, res) => {
+    req.logout(function(err) {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to log out' });
+      }
+  
+      req.session.destroy((err) => {
+        if (err) {
+          return res.status(500).json({ error: 'Failed to destroy session' });
+        }
+  
+        res.clearCookie('connect.sid'); // Clear the session cookie
+        res.status(200).json({ message: 'Successfully logged out' });
+      });
+    });
+  }
   
 
 
@@ -76,5 +94,6 @@ const getProfile = asyncHandler( async (req, res) => {
 export default {
     registerUser,
     loginUser,
-    getProfile
+    getProfile,
+    logoutUser
 }

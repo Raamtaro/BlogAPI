@@ -9,12 +9,21 @@ import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { localStrategy } from "./config/passportLocalStrategy.js";
 import { jwtStrategy } from "./config/passportJwtStrategy.js";
 
+import cors from 'cors'
+
 
 configDotenv()
 
 const prisma = new PrismaClient();
 const app = express();
 const port = 3000;
+
+app.use(cors(
+    {
+        origin: 'http://localhost:5173',
+        credentials: true,
+    }
+))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
