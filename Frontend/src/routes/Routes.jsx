@@ -8,6 +8,7 @@ import App from "../App";
 import Editor from "../Views/Admin/Editor";
 import AdminProfile from "../Views/Admin/AdminProfile";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminView from "../Views/AdminView";
 
 const router = createBrowserRouter([
   {
@@ -38,13 +39,17 @@ const router = createBrowserRouter([
         path: "admin",
         element: (
             <ProtectedRoute>
-                <AdminProfile />
+                <AdminView />
             </ProtectedRoute>
         ),
         children: [
             {
                 path: "editor",
                 element: <Editor />
+            },
+            {
+                path: "profile",
+                element: <AdminProfile />
             }
         ]
       },

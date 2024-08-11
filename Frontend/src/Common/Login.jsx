@@ -30,7 +30,7 @@ const Login = () => {
                 if (user.role !== "ADMIN") {
                     navigate('/welcome')
                 } else {
-                    navigate('/admin')
+                    navigate('/admin/profile')
                 }
                 
                 
