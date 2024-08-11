@@ -25,7 +25,15 @@ const Login = () => {
                 const result = await response.json()
                 localStorage.setItem('token', result.token)
                 localStorage.setItem('user', JSON.stringify(result.user))
-                navigate('/welcome')
+                
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user.role !== "ADMIN") {
+                    navigate('/welcome')
+                } else {
+                    navigate('/admin')
+                }
+                
+                
             }
         } catch (error) {
             console.log(error.message)

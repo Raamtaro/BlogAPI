@@ -5,6 +5,8 @@ import Login from "../Common/Login";
 import WelcomeTest from "../Common/WelcomeTest";
 import CreateAccount from "../Common/CreateAccount";
 import App from "../App";
+import Editor from "../Views/Admin/Editor";
+import AdminProfile from "../Views/Admin/AdminProfile";
 import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
@@ -15,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "register",
+        element: <CreateAccount />
       },
       {
         path: "login",
@@ -28,6 +34,21 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         ),
       },
+      {
+        path: "admin",
+        element: (
+            <ProtectedRoute>
+                <AdminProfile />
+            </ProtectedRoute>
+        ),
+        children: [
+            {
+                path: "editor",
+                element: <Editor />
+            }
+        ]
+      },
+
     ],
   },
 ]);

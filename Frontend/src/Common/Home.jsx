@@ -1,15 +1,26 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import './styles/Home.css'
 
 const Home = () => {
     const navigate = useNavigate()
-    const handleSubmit = () => {
+
+    const handleLoginSubmit = () => {
         navigate('/login')
+    }
+
+    const handleRegisterSubmit = () =>{
+        navigate('/register')
+
     }
     return (
         <> 
-            <div>Home</div>
-            <button onClick={handleSubmit}>Login</button>
+            <div className='title'>Home</div>
+            <div className="actionItems">
+                <button onClick={handleLoginSubmit}>Login</button>
+                <button onClick={handleRegisterSubmit}>Register</button>
+            </div>
+
         </>
     
     )

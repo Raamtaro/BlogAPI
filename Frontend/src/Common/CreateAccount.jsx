@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const CreateAccount = () => {
+    const navigate = useNavigate()
     const handleSubmit = async (event) => {
         event.preventDefault()
         const formData = new FormData(event.target);
@@ -19,10 +21,10 @@ const CreateAccount = () => {
                         body: JSON.stringify(data)
                     }
                 )
-            console.log(response.json())
+                navigate('/login')
         } catch (error) {
             console.error(error.message)
-
+            
         } 
     }
 
