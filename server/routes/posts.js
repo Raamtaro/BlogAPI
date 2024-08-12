@@ -7,7 +7,7 @@ const router = Router()
 
 router.get('/', postController.getAllPosts)
 // router.get('/post', postController.getPost)
-router.get('/', passport.authenticate('jwt', {session: false}), postController.getCurrentUserPosts)
+router.get('/userposts', passport.authenticate('jwt', {session: false}), postController.getCurrentUserPosts)
 router.post('/post', passport.authenticate('jwt', {session: false}), validationMiddleware.validatePostMod, postController.createPost)
 router.put('/post', passport.authenticate('jwt', {session: false}), validationMiddleware.validatePostMod, postController.updatePost)
 router.delete('/post', passport.authenticate('jwt', {session: false}), postController.deletePost)

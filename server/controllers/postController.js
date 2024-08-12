@@ -63,7 +63,7 @@ const createPost = asyncHandler(async (req, res) => {
     if (!(client.role === "ADMIN")) {
         return res.status(403).json(
             {
-                error: "Cannot create posts without ADMIN assignment"
+                error: "Cannot post unless you are an Admin"
             }
         )
     }
