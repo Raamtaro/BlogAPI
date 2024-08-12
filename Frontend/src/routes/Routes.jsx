@@ -5,10 +5,12 @@ import Login from "../Common/Login";
 import WelcomeTest from "../Common/WelcomeTest";
 import CreateAccount from "../Common/CreateAccount";
 import App from "../App";
-import Editor from "../Views/Admin/Editor";
+import PostEditor from "../Views/Admin/PostEditor";
 import AdminProfile from "../Views/Admin/AdminProfile";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminView from "../Views/AdminView";
+import UserView from "../Views/UserView";
+import UserProfile from "../Views/User/UserProfile";
 
 const router = createBrowserRouter([
   {
@@ -45,7 +47,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "editor",
-                element: <Editor />
+                element: <PostEditor />
             },
             {
                 path: "profile",
@@ -53,6 +55,20 @@ const router = createBrowserRouter([
             }
         ]
       },
+      {
+        path: "user",
+        element: (
+            <ProtectedRoute>
+                <UserView />
+            </ProtectedRoute>
+        ),
+        children: [
+            {
+                path: "profile",
+                element: <UserProfile />
+            }
+        ]
+      }
 
     ],
   },
