@@ -1,9 +1,11 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../contexts/UserContext'
 
 const Login = () => {
     const navigate = useNavigate()
+    const {login} = useUser()
     const handleSubmit = async(event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -23,11 +25,9 @@ const Login = () => {
             )
             if (response.ok) {
                 const result = await response.json()
-                localStorage.setItem('token', result.token)
-                localStorage.setItem('user', JSON.stringify(result.user))
                 
-                const user = JSON.parse(localStorage.getItem('user'));
-                if (user.role !== "ADMIN") {
+                login(result.user, result.token)
+                if (result.user.role !== "ADMIN") {
                     navigate('/user/profile')
                 } else {
                     navigate('/admin/profile')
