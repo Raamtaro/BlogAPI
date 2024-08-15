@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react'
 import { useUser } from '../../contexts/UserContext'
+
 import { HiUser, HiOutlinePencil, HiX } from 'react-icons/hi'
 import { IoMdAlbums, IoMdBackspace } from "react-icons/io";
+import {PiHouse} from 'react-icons/pi'
+
 import { useNavigate } from 'react-router-dom';
 
 import gsap from 'gsap';
@@ -62,8 +65,19 @@ const AdminNavBar = () => {
                         PROFILE
                     </div>
                 </div>
-
-
+                <div 
+                    className="nav-item"
+                    onMouseEnter={()=> handleMouseEnter('home')}
+                    onMouseLeave={() => handleMouseLeave('home')}
+                    onClick={handleProfile}
+                >
+                    <span>
+                        <PiHouse />
+                    </span>
+                    <div className={`nav-item-text ${hoveredItem === 'home' ? '': 'fade-out'}`}>
+                        HOME
+                    </div>
+                </div>
             </div>
             <div className="nav-section">
                 <div
