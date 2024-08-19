@@ -18,6 +18,7 @@ gsap.registerPlugin(useGSAP)
 const AdminNavBar = () => {
     const [hoveredItem, setHoveredItem] = useState(null);
     const navigate = useNavigate()
+    const {user, logout} = useUser()
 
     const handleMouseEnter = (item) => {
         setHoveredItem(item);
@@ -47,9 +48,9 @@ const AdminNavBar = () => {
             .from('.nav-item', {opacity: 0, x: 20, delay: 2.75})
     })
     
-    const {user, logout} = useUser()
+    
     return (
-        <nav>
+        <nav className='admin-menu'>
 
             <div className="nav-section">
                 <div 

@@ -1,8 +1,14 @@
 nav {
     position: fixed;
-    bottom: 0;
+    
     left: 0;
     width: 200px;
+}
+
+.admin-menu {
+    bottom: 0;
+    margin: 20px;
+
 }
 
 .nav-section {
