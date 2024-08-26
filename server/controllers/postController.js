@@ -39,7 +39,7 @@ const getCurrentUserPosts = asyncHandler(
         const allUsersPosts = await prisma.posts.findMany(
             {
                 where: {
-                    id: client.id
+                    authorId: client.id
                 }
             }
         )
