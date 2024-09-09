@@ -8,15 +8,10 @@ import './App.css'
 function App() {
   return (
     <div className='main'>
-      {/* <header>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/welcome">Welcome</Link></li>
-          </ul>
-        </nav>
-      </header> */}
+      <header>
+        <h4>The MishMash Blog</h4>
+        <h5>My thoughts on yoga, life, and other stuff</h5>
+      </header>
       
       <main>
         
